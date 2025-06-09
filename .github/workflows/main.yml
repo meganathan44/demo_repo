@@ -1,0 +1,122 @@
+name: Dependency Version Checker
+on:
+  pull_request:
+    types: [opened, synchronize]
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+jobs:
+  check-dependencies:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests packaging
+      - name: Create and run checker
+        run: |
+          mkdir -p .github/scripts
+          echo '
+          import os, json, subprocess, re
+          from pathlib import Path
+          def check_deps():
+              results = {"npm": [], "pip": []}
+              # Check NPM
+              if os.path.exists("package.json"):
+                  with open("package.json") as f:
+                      pkg = json.load(f)
+                      deps = {**pkg.get("dependencies", {}), **pkg.get("devDependencies", {})}
+                      for name, ver in deps.items():
+                          ver = ver.replace("^", "").replace("~", "")
+                          try:
+                              proc = subprocess.run(["npm", "view", name, "version"],
+                                                  capture_output=True, text=True)
+                              latest = proc.stdout.strip()
+                              results["npm"].append({
+                                  "name": name,
+                                  "current": ver,
+                                  "latest": latest
+                              })
+                          except: pass
+              # Check Python
+              if os.path.exists("requirements.txt"):
+                  with open("requirements.txt") as f:
+                      for line in f:
+                          if line.strip() and not line.startswith("#"):
+                              match = re.match(r"([^=<>]+)(==|>=|<=|~=|!=|<|>)?(.+)?", line)
+                              if match:
+                                  name = match.group(1).strip()
+                                  ver = match.group(3).strip() if match.group(3) else "Not specified"
+                                  try:
+                                      proc = subprocess.run(["pip", "index", "versions", name],
+                                                          capture_output=True, text=True)
+                                      versions = re.findall(r"\d+\.\d+\.\d+", proc.stdout)
+                                      if versions:
+                                          latest = sorted(versions)[-1]
+                                          results["pip"].append({
+                                              "name": name,
+                                              "current": ver,
+                                              "latest": latest
+                                          })
+                                  except: pass
+              with open("dep-report.json", "w") as f:
+                  json.dump(results, f)
+          check_deps()
+          ' > check_deps.py
+          python check_deps.py
+      - name: Post Results
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let comment = '# :package: Dependency Version Check Report\n\n';
+            try {
+              const results = JSON.parse(fs.readFileSync('dep-report.json', 'utf8'));
+              for (const [manager, packages] of Object.entries(results)) {
+                if (packages.length > 0) {
+                  comment += `### ${manager.toUpperCase()} Dependencies\n`;
+                  comment += '| Package | Current Version | Latest Version | Status |\n';
+                  comment += '|---------|----------------|----------------|--------|\n';
+                  for (const pkg of packages) {
+                    const status = pkg.current !== pkg.latest ? ':warning: Outdated' : ':white_check_mark: Up to date';
+                    comment += `| ${pkg.name} | ${pkg.current} | ${pkg.latest} | ${status} |\n`;
+                  }
+                  comment += '\n';
+                }
+              }
+            } catch (error) {
+              comment += ':warning: No dependency files found or error checking dependencies.\n\n';
+              comment += 'Make sure you have one of these files:\n';
+              comment += '- package.json (for NPM packages)\n';
+              comment += '- requirements.txt (for Python packages)\n';
+            }
+            if (context.payload.pull_request) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                body: comment
+              });
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: ':package: Dependency Version Check Report',
+                body: comment
+              });
+            }
