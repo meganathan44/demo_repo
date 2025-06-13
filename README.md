@@ -1,6 +1,4 @@
 hii
 kll
 
-gr
-
-llll
+g
