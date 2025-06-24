@@ -52,6 +52,7 @@ runExtraQueries()
 # ✅ Get a new session for database operations
 session = get_db_session()
 
+key="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"
 
 @app.route("/")
 def home():
