@@ -5,8 +5,4 @@ kjldsj;ladfkj;lkjladfskldfldgk;ldkjldfskjljfdefds,;ldvsl
 api_key = "ghp_123456789abcdefghijklmnopqrstuvwxyz123"akjkjadfskladfskl
 aws_key = "AKIAIOSFODNN7EXAMPL
 #l;l;l;l;kldsjdadsldfsefm;ldfskmdvskmlm;dsdfsdfs;ldfs;l
-#dflkjldmzlkzdfcjsklmdlds,ldfsladfl
-g;lmdsm;lerk
-ldfkjlskjjdskjlksdskmks
-gd
-d36F1BFFda0b25FEd69eaA34D2E7EC18f2d5B480Cd710bac928A6C700BB13EAa54b4cfF
+
