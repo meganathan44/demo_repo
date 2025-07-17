@@ -1696,3 +1696,37 @@ def add_cors_headers(response):
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000, threaded=True)
+
+
+
+
+
+
+
+
+def save_scan_result(temp_id, scan_data):
+    """ ✅ Save scan data to a JSON file (creates if not exists) using temp_id """
+
+
+    file_path = os.path.join(SCAN_RESULTS_DIR, f"{temp_id}.json")
+    temp_path = file_path + ".tmp"
+
+    try:
+        # ✅ If the file exists, load existing data
+        if os.path.exists(file_path):
+            with open(file_path, "r", encoding="utf-8") as file:
+                try:
+                    existing_data = json.load(file)
+                except json.JSONDecodeError:
+                    print(f"⚠️ Warning: Corrupted existing file for {temp_id}. Starting fresh.")
+                    existing_data = {}
+        else:
+            existing_data = {}  # ✅ Create new JSON structure
+
+        # ✅ Update with new scan data
+        # Set timezone to Asia/Kolkata
+        india_tz = pytz.timezone('Asia/Kolkata')
+        now_in_india = datetime.now(india_tz)
+        # Format scan end time
+        scan_data["scan_end_time"] = now_in_india.strftime("%B %d, %Y at %I:%M %p").lstrip("0").replace(" 0", " ") # Remove leading zero and replace " 0" with " "
+        existing_data.update(scan_data)  
