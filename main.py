@@ -3,7 +3,7 @@ from flask_cors import CORS
 import subprocess
 import shutil  #  Import shutil to check if Nmap exists
 import re  # Import regex module for filtering open ports
-import requests  # ✅ Import requests to fetch headers
+import requests  # ✅ Import requests to fetc,sh headers
 #kjdskjlsdfkldskdkjlfs
 #kjlggfiuoijghklkjlk.ddvsldvsedfkjkh
 from data_base import init_db, get_db_session , CompanyInfo, Vulnerabilities, runExtraQueries, Vulnerable, VulnerableAIResponse 
