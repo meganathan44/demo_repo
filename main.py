@@ -11,7 +11,7 @@ import os
 import json 
 import subprocess
 from urllib.parse import urljoin
-from urllib.parse import urlparse, urlunparsesdn,sdsk,ks
+from urllib.parse import urlparse, urlunparse
 import multiprocessing
 import time
 import os
