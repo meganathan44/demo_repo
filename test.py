@@ -1,4 +1,4 @@
-def calculate_sum a, b  # Missing parentheses and colon
+def calculate_sum a, b  # Missing parentheses and colonn
 x = 5 +  # Incomplete expressions
 if x > 3  # Missing colon 
     print("x is large"  # Missing closing parenthesis
