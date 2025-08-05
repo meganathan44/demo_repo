@@ -1,6 +1,6 @@
 def calculate_sum a, b  # Missing parentheses and colonn
 x = 5 +  # Incomplete expressions
-if x > 3  # Missing colon 
+if x > 3  # Missing colon find
     print("x is large"  # Missing closing parenthesis
 while True print("loop")  # Missing colon after while
 y = [1, 2, 3  # Missing closing bracket
