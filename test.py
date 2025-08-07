@@ -1,5 +1,5 @@
 def calculate_sum a, b  # Missing parentheses and colonn
-x = 5 +  # Incomplete expressions
+x = 5 +  # Incomplete expressionsffff
 if x > 3  # Missing colon find
     print("x is large"  # Missing closing parenthesis
 while True print("loop")  # Missing colon after while
