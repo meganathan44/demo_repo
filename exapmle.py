@@ -6,7 +6,7 @@ aws_secret = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 #mdfkdgldfkjlk
 openai_key = "sk-live-aB1cD2eF3gHiJ4klMN5OPQrSTuVwXyZ6ABCD78"
 #dfjldgsijsij
-#dffdf;lmm.mm
+#dffdf;lmm.m
 aws_key = "AKIAIOSFODNN7EXAMPLE"
 aws_secret = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 openai_key = "sk-live-aB1cD2eF3gHiJ4klMN5OPQrSTuVwXyZ6ABCD78"
